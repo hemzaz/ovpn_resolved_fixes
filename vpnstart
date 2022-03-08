@@ -1,0 +1,20 @@
+#!/bin/bash
+name=$1
+if [ -z "$name" ]; then
+	echo "Specify a configuration"
+	exit 1
+fi
+
+# change the terminal title
+printf "\\033]0;VPN Session\\007"
+
+cfg=/home/$SUDO_USER/bin/vpnstart.${name}.ovpn
+
+if [ `id -u` != 0 ]; then
+    echo "exec: sudo $0 $name"
+    sleep 1
+    sudo $0 $name
+else
+    export PATH=/usr/local/sbin:/usr/local/bin:$PATH
+    openvpn --config $cfg
+fi
